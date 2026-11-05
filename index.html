@@ -59,7 +59,7 @@ function buildPairingScript(){
       if (!response.ok) throw new Error('config.js HTTP ' + response.status);
       const source = await response.text();
       function extractLast(name) {
-        const matches = [...source.matchAll(new RegExp(name + '\\\\s*=\\\\s*(\\\\[[\\\\s\\\\S]*?\\\\]);', 'g'))];
+        const matches = [...source.matchAll(new RegExp(name + '\\s*=\\s*(\\[[\\s\\S]*?\\]);', 'g'))];
         return matches.length ? JSON.parse(matches[matches.length - 1][1]) : [];
       }
       const wireless = extractLast('WirelessDeviceDataArray');
