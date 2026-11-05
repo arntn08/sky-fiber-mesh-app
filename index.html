@@ -59,7 +59,7 @@ function buildPairingScript(){
       if (!response.ok) throw new Error('config.js HTTP ' + response.status);
       const source = await response.text();
       function extractLast(name) {
-         const matches = []; let from = 0; while (true) { const at = source.indexOf(name, from); if (at < 0) break; const eq = source.indexOf('=', at + name.length); if (eq < 0) break; const open = source.indexOf('[', eq + 1); if (open < 0) break; let depth = 0, quote = false, escaped = false, end = -1; for (let i = open; i < source.length; i++) { const ch = source[i]; if (quote) { if (escaped) escaped = false; else if (ch === '\\\\') escaped = true; else if (ch === '"') quote = false; } else if (ch === '"') quote = true; else if (ch === '[') depth++; else if (ch === ']') { depth--; if (depth === 0) { end = i; break; } } } if (end >= 0) matches.push(source.slice(open, end + 1)); from = at + name.length; } return matches.length ? JSON.parse(matches[matches.length - 1]) : [];
+         if (!matches.length) return Array.isArray(window[name]) ? window[name] : []; const literal = matches[matches.length - 1]; try { return JSON.parse(literal); } catch (parseError) { const liveValue = window[name]; if (Array.isArray(liveValue)) return liveValue; console.warn('SKY MESH could not safely parse ' + name + ' from firmware text; no live global array was exposed.', parseError.message); return []; }
       }
       const wireless = extractLast('WirelessDeviceDataArray');
       const wired = extractLast('WiredDeviceDataArray');
