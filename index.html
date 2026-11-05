@@ -76,7 +76,7 @@ function buildPairingScript(){
           if (!fileResponse.ok) continue;
           const fileText = await fileResponse.text();
           if (path === 'scripts/config/config.js') configSource = fileText;
-           const lines = fileText.split('\n');
+           const lines = fileText.split('\\n');
           for (const line of lines) {
              const lower = line.toLowerCase(); const include = ['ssid','wlan','wireless','encrypt','security','channel','traffic','throughput','rx','tx','octets','bandwidth','rate','speed','ifname','interface'].some(word => lower.includes(word)); const exclude = ['password','passwd','passphrase','secret','token','cookie','authorization','psk','private key'].some(word => lower.includes(word)); if (include && !exclude) {
               clues.push(path + ': ' + line.trim().slice(0,220));
