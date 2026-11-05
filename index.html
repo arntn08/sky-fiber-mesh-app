@@ -93,7 +93,7 @@ function buildPairingScript(){
         const statusResponse = await fetch('/skyrouter/skyInfoStatus.asp', {cache:'no-store', credentials:'include'});
         if (statusResponse.ok) wan = await statusResponse.json();
       } catch (_) {}
-      const readConst = name => { const m = configSource.match(new RegExp('(?:const|var|let)\\s+' + name + '\\s*=\\s*["\\']([^"\\']*)["\\']')); return m ? m[1] : null; };
+      const readConst = name => { const m = configSource.match(new RegExp("(?:const|var|let)\\s+" + name + "\\s*=\\s*\"([^\"]*)\"")); return m ? m[1] : null; };
       const readNumber = name => { const m = configSource.match(new RegExp('(?:const|var|let)\\s+' + name + '\\s*=\\s*(-?\\d+)')); return m ? Number(m[1]) : null; };
       const wifiInfo = {ssid2g:readConst('SSID_2g'), ssid5g:readConst('SSID_5g'), wlan2g:readNumber('wlan_2g'), wlan5g:readNumber('wlan_5g'), wlanNum:readNumber('wlan_num')};
       const payload = {wireless, wired, wan, clues, wifiInfo, sampledAt: new Date().toISOString()};
