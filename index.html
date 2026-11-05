@@ -56,6 +56,12 @@ function buildPairingScript(){
   const PAIR_TOKEN = ${token};
   const APP_ORIGIN = ${target};
   const APP_URL = ${appUrl};
+  let latestPayload = null;
+  window.addEventListener('message', event => {
+    const request = event.data;
+    if (event.origin !== APP_ORIGIN || !request || request.type !== 'SKYMESH_RN410_REQUEST' || request.token !== PAIR_TOKEN) return;
+    if (latestPayload && event.source) event.source.postMessage({type:'SKYMESH_RN410_DATA', token:PAIR_TOKEN, payload:latestPayload}, APP_ORIGIN);
+  });
   const send = async () => {
     try {
       const response = await fetch('/skyrouter/scripts/config/config.js', {cache:'no-store', credentials:'include'});
@@ -117,11 +123,7 @@ function buildPairingScript(){
        const readNumber = name => { const start = configSource.indexOf(name); if (start < 0) return null; const eq = configSource.indexOf('=', start + name.length); if (eq < 0) return null; const value = parseInt(configSource.slice(eq + 1).trim(), 10); return Number.isFinite(value) ? value : null; };
       const wifiInfo = {ssid2g:readConst('SSID_2g'), ssid5g:readConst('SSID_5g'), wlan2g:readNumber('wlan_2g'), wlan5g:readNumber('wlan_5g'), wlanNum:readNumber('wlan_num')};
       const payload = {wireless, wired, wan, clues, wifiInfo, sampledAt: new Date().toISOString()};
-      if (window.__skyMeshAppWindow && !window.__skyMeshAppWindow.closed) {
-        window.__skyMeshAppWindow.postMessage({type:'SKYMESH_RN410_DATA', token:PAIR_TOKEN, payload}, APP_ORIGIN);
-      } else {
-        console.warn('SKY MESH app window is closed. Run the pairing script again.');
-      }
+      latestPayload = payload;
     } catch (error) {
       console.error('SKY MESH read-only relay:', error.message);
     }
@@ -209,4 +211,11 @@ window.addEventListener('message',event=>{
   if(event.source!==window.opener||event.origin!==routerOrigin||!data||data.type!=='SKYMESH_RN410_DATA'||data.token!==pairToken) return;
   renderRouterData(data.payload||{});
 });
+if (window.opener && urlPairToken) {
+  const requestRouterData = () => {
+    try { window.opener.postMessage({type:'SKYMESH_RN410_REQUEST', token:pairToken}, new URL(address.value.trim()).origin); } catch(e) {}
+  };
+  requestRouterData();
+  setInterval(requestRouterData, 3000);
+}
 </script></body></html>
