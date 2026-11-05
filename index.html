@@ -117,19 +117,21 @@ function buildPairingScript(){
        const readNumber = name => { const start = configSource.indexOf(name); if (start < 0) return null; const eq = configSource.indexOf('=', start + name.length); if (eq < 0) return null; const value = parseInt(configSource.slice(eq + 1).trim(), 10); return Number.isFinite(value) ? value : null; };
       const wifiInfo = {ssid2g:readConst('SSID_2g'), ssid5g:readConst('SSID_5g'), wlan2g:readNumber('wlan_2g'), wlan5g:readNumber('wlan_5g'), wlanNum:readNumber('wlan_num')};
       const payload = {wireless, wired, wan, clues, wifiInfo, sampledAt: new Date().toISOString()};
-      if (!window.__skyMeshAppWindow || window.__skyMeshAppWindow.closed) {
-        window.__skyMeshAppWindow = window.open(APP_URL + '?pair=' + encodeURIComponent(PAIR_TOKEN), '_blank');
-      }
       if (window.__skyMeshAppWindow && !window.__skyMeshAppWindow.closed) {
         window.__skyMeshAppWindow.postMessage({type:'SKYMESH_RN410_DATA', token:PAIR_TOKEN, payload}, APP_ORIGIN);
       } else {
-        console.warn('SKY MESH app popup was blocked. Allow popups for the RN410 page and run the script again.');
+        console.warn('SKY MESH app window is closed. Run the pairing script again.');
       }
     } catch (error) {
       console.error('SKY MESH read-only relay:', error.message);
     }
   };
   if (window.__skyMeshRelay) clearInterval(window.__skyMeshRelay);
+  window.__skyMeshAppWindow = window.open(APP_URL + '?pair=' + encodeURIComponent(PAIR_TOKEN), '_blank');
+  if (!window.__skyMeshAppWindow) {
+    console.error('SKY MESH app popup was blocked. Allow popups for the RN410 page and run the script again.');
+    return;
+  }
   await send();
   window.__skyMeshRelay = setInterval(send, 10000);
   console.log('SKY MESH read-only relay active. Refreshes every 10 seconds. Stop with clearInterval(window.__skyMeshRelay).');
