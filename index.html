@@ -59,7 +59,10 @@ function buildPairingScript(){
       if (!response.ok) throw new Error('config.js HTTP ' + response.status);
       const source = await response.text();
       function extractLast(name) {
-         if (!matches.length) return Array.isArray(window[name]) ? window[name] : []; const literal = matches[matches.length - 1]; try { return JSON.parse(literal); } catch (parseError) { const liveValue = window[name]; if (Array.isArray(liveValue)) return liveValue; console.warn('SKY MESH could not safely parse ' + name + ' from firmware text; no live global array was exposed.', parseError.message); return []; }
+        const liveValue = window[name];
+        if (Array.isArray(liveValue)) return liveValue;
+        console.warn('SKY MESH: ' + name + ' is not exposed as a live array in this router frame.');
+        return [];
       }
       const wireless = extractLast('WirelessDeviceDataArray');
       const wired = extractLast('WiredDeviceDataArray');
