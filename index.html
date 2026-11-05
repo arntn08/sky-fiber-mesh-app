@@ -136,9 +136,12 @@ document.getElementById('openRouter').addEventListener('click',()=>{
   try {
     const parsed=new URL(routerUrl);
     if(!['http:','https:'].includes(parsed.protocol)) throw new Error('Invalid protocol');
-    routerWindow=window.open(parsed.href,'skyMeshRN410');
+    // Always create a fresh router browsing context; an old named tab may have a null opener.
+    const freshWindowName='skyMeshRN410_'+Date.now();
+    routerWindow=window.open('about:blank',freshWindowName);
+    if(routerWindow) routerWindow.location.href=parsed.href;
     document.getElementById('pairingHelp').textContent=routerWindow
-      ? "Router tab opened. Log in if needed, then run the pairing script in the router page DevTools Console."
+      ? "Fresh router tab opened. Log in if needed, then run the pairing script in the router page DevTools Console."
       : 'The browser blocked the popup. Allow popups for this site, then try again.';
   } catch(e) { document.getElementById('pairingHelp').textContent='Enter a valid router URL and save it first.'; }
 });
