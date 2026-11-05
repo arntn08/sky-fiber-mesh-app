@@ -91,28 +91,35 @@ function buildPairingScript(){
       }
       const wireless = extractArray('WirelessDeviceDataArray');
       const wired = extractArray('WiredDeviceDataArray');
-      const inspectFiles = [
-        'scripts/config/config.js','scripts/utils/skyrouter.js','scripts/app/info_windows.js',
-        'scripts/app/setting_windows.js','scripts/app/main.js','scripts/config/app.js',
-        'scripts/config/app_main.js'
+      const fixedFiles = [
+        '/skyrouter/scripts/config/config.js','/skyrouter/scripts/utils/skyrouter.js','/skyrouter/scripts/app/info_windows.js',
+        '/skyrouter/scripts/app/setting_windows.js','/skyrouter/scripts/app/main.js','/skyrouter/scripts/config/app.js',
+        '/skyrouter/scripts/config/app_main.js'
       ];
+      const loadedScripts = performance.getEntriesByType('resource')
+        .map(entry => entry.name)
+        .filter(url => { try { const parsed = new URL(url); return parsed.origin === location.origin && /\\.js(?:[?#]|$)/i.test(parsed.href); } catch (_) { return false; } });
+      const inspectFiles = [...new Set([...fixedFiles, ...loadedScripts])].slice(0,45);
       const clues = [];
       let configSource = '';
-      for (const path of inspectFiles) {
+      for (const url of inspectFiles) {
         try {
-          const fileResponse = await fetch('/skyrouter/' + path, {cache:'no-store', credentials:'include'});
+          const fileResponse = await fetch(url, {cache:'no-store', credentials:'include'});
           if (!fileResponse.ok) continue;
           const fileText = await fileResponse.text();
-          if (path === 'scripts/config/config.js') configSource = fileText;
-           const lines = fileText.split('\\n');
+          if (url.endsWith('/scripts/config/config.js')) configSource = fileText;
+          const lines = fileText.split('\\n');
           for (const line of lines) {
-             const lower = line.toLowerCase(); const include = ['ssid','wlan','wireless','encrypt','security','channel','traffic','throughput','rx','tx','octets','bandwidth','rate','speed','ifname','interface'].some(word => lower.includes(word)); const exclude = ['password','passwd','passphrase','secret','token','cookie','authorization','psk','private key'].some(word => lower.includes(word)); if (include && !exclude) {
-              clues.push(path + ': ' + line.trim().slice(0,220));
-              if (clues.length >= 55) break;
+            const lower = line.toLowerCase();
+            const include = ['easymesh','mesh','node','topology','backhaul','rssi','signal','station','client','device','parent','agent','traffic','throughput','rx','tx','octets','bytes','bandwidth','rate','speed','uptime','ping','ajax','xmlhttprequest','fetch(','/boafrm/','.asp'].some(word => lower.includes(word));
+            const exclude = ['password','passwd','passphrase','secret','token','cookie','authorization','psk','private key','set-cookie'].some(word => lower.includes(word));
+            if (include && !exclude) {
+              clues.push(new URL(url).pathname.replace('/skyrouter/','') + ': ' + line.trim().slice(0,240));
+              if (clues.length >= 120) break;
             }
           }
         } catch (_) {}
-        if (clues.length >= 55) break;
+        if (clues.length >= 120) break;
       }
       let wan = null;
       try {
