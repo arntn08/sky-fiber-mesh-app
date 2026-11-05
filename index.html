@@ -60,7 +60,6 @@ function buildPairingScript(){
       const source = await response.text();
       function extractLast(name) {
          const matches = []; let from = 0; while (true) { const at = source.indexOf(name, from); if (at < 0) break; const eq = source.indexOf('=', at + name.length); if (eq < 0) break; const open = source.indexOf('[', eq + 1); if (open < 0) break; let depth = 0, quote = false, escaped = false, end = -1; for (let i = open; i < source.length; i++) { const ch = source[i]; if (quote) { if (escaped) escaped = false; else if (ch === '\\\\') escaped = true; else if (ch === '"') quote = false; } else if (ch === '"') quote = true; else if (ch === '[') depth++; else if (ch === ']') { depth--; if (depth === 0) { end = i; break; } } } if (end >= 0) matches.push(source.slice(open, end + 1)); from = at + name.length; } return matches.length ? JSON.parse(matches[matches.length - 1]) : [];
-        return matches.length ? JSON.parse(matches[matches.length - 1][1]) : [];
       }
       const wireless = extractLast('WirelessDeviceDataArray');
       const wired = extractLast('WiredDeviceDataArray');
@@ -80,7 +79,6 @@ function buildPairingScript(){
            const lines = fileText.split('\n');
           for (const line of lines) {
              const lower = line.toLowerCase(); const include = ['ssid','wlan','wireless','encrypt','security','channel','traffic','throughput','rx','tx','octets','bandwidth','rate','speed','ifname','interface'].some(word => lower.includes(word)); const exclude = ['password','passwd','passphrase','secret','token','cookie','authorization','psk','private key'].some(word => lower.includes(word)); if (include && !exclude) {
-                !/password|passwd|passphrase|secret|token|cookie|authorization|psk|private.?key/i.test(line)) {
               clues.push(path + ': ' + line.trim().slice(0,220));
               if (clues.length >= 55) break;
             }
