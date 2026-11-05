@@ -93,8 +93,8 @@ function buildPairingScript(){
         const statusResponse = await fetch('/skyrouter/skyInfoStatus.asp', {cache:'no-store', credentials:'include'});
         if (statusResponse.ok) wan = await statusResponse.json();
       } catch (_) {}
-       const readConst = name => { const m = configSource.match(new RegExp('(?:const|var|let)\\\\s+' + name + '\\\\s*=\\\\s*"([^"]*)"')); return m ? m[1] : null; };
-       const readNumber = name => { const m = configSource.match(new RegExp('(?:const|var|let)\\\\s+' + name + '\\\\s*=\\\\s*(-?\\\\d+)')); return m ? Number(m[1]) : null; };
+       const readConst = name => { const start = configSource.indexOf(name); if (start < 0) return null; const eq = configSource.indexOf('=', start + name.length); if (eq < 0) return null; const q1 = configSource.indexOf('"', eq + 1); if (q1 < 0) return null; const q2 = configSource.indexOf('"', q1 + 1); return q2 < 0 ? null : configSource.slice(q1 + 1, q2); };
+       const readNumber = name => { const start = configSource.indexOf(name); if (start < 0) return null; const eq = configSource.indexOf('=', start + name.length); if (eq < 0) return null; const value = configSource.slice(eq + 1).trim().match(/^-?\\d+/); return value ? Number(value[0]) : null; };
       const wifiInfo = {ssid2g:readConst('SSID_2g'), ssid5g:readConst('SSID_5g'), wlan2g:readNumber('wlan_2g'), wlan5g:readNumber('wlan_5g'), wlanNum:readNumber('wlan_num')};
       const payload = {wireless, wired, wan, clues, wifiInfo, sampledAt: new Date().toISOString()};
       if (window.top.opener && !window.top.opener.closed) {
