@@ -18,14 +18,14 @@
 <section class="view active" id="dashboard"><div class="grid">
 <article class="card span-3"><div class="card-head"><h3>Internet status</h3><span class="tag warn">DEMO</span></div><div class="metric" id="internetMetric">Not paired</div><div class="statusline" id="routerStatusLine"><span class="dot"></span> Waiting for router data</div></article>
 <article class="card span-3"><div class="card-head"><h3>Connected devices</h3><span class="tag" id="deviceTag">WAITING</span></div><div class="metric"><span id="connectedCount">—</span> <small>devices</small></div><div class="sub" id="deviceSource">Pair the RN410 to load its device list.</div></article>
-<article class="card span-3"><div class="card-head"><h3>Download speed</h3><span class="tag">SAMPLE</span></div><div class="metric">-- <small>Mbps</small></div><div class="sub">Waiting for router integration</div></article>
+<article class="card span-3"><div class="card-head"><h3>Download speed</h3><span class="tag">UNAVAILABLE</span></div><div class="metric">-- <small>Mbps</small></div><div class="sub">RN410 traffic counters not identified yet</div></article>
 <article class="card span-3"><div class="card-head"><h3>Upload speed</h3><span class="tag">SAMPLE</span></div><div class="metric">-- <small>Mbps</small></div><div class="sub">Waiting for router integration</div></article>
 <article class="card span-7"><div class="card-head"><h3>Network activity</h3><span class="sub">Illustrative traffic · not measured</span></div><div class="chart" aria-label="Illustrative network activity"><i style="height:34%"></i><i style="height:48%"></i><i style="height:39%"></i><i style="height:68%"></i><i style="height:54%"></i><i style="height:83%"></i><i style="height:62%"></i><i style="height:94%"></i><i style="height:71%"></i><i style="height:58%"></i><i style="height:76%"></i><i style="height:44%"></i><i style="height:65%"></i><i style="height:86%"></i><i style="height:51%"></i><i style="height:70%"></i></div><div class="legend"><span>Earlier</span><span>Now · demo graphic</span></div></article>
 <article class="card span-5"><div class="card-head"><h3>Mesh health</h3><span class="tag warn">Not connected</span></div><div class="metric">— <small>nodes online</small></div><p class="sub">Node count and signal quality will appear when the router is reachable.</p><div class="signal"><i style="width:0%"></i></div><div class="legend"><span>Signal strength</span><span>Unavailable</span></div></article>
 <article class="card span-6"><div class="card-head"><h3>Device snapshot</h3><button class="btn" data-go="devices">View all</button></div><div id="deviceSnapshot" class="empty">No router data received yet. Pair your RN410 from Settings.</div></article>
 <article class="card span-6"><div class="card-head"><h3>Router connection</h3><span class="tag warn">Pending</span></div><div class="sub">Target admin address</div><div class="metric" style="font-size:20px">192.168.55.254</div><p class="sub">This address is saved as the planned router endpoint. No connection has been tested.</p><button class="btn primary" data-go="settings">Configure connection →</button></article>
 </div></section>
-<section class="view" id="wifi"><h2 class="view-title">Wi-Fi management</h2><p class="view-desc">Network configuration panel · controls are preview-only until router access is available.</p><div class="grid"><article class="card span-6"><div class="card-head"><h3>Main Wi-Fi network</h3><span class="tag warn">Preview only</span></div><div class="field"><label>Network name (SSID)</label><input value="SKY_Fiber_WiFi" disabled></div><div class="field"><label>Security</label><input value="WPA2 / WPA3 (to be verified)" disabled></div><div class="field"><label>Password</label><input value="••••••••••••" disabled></div><button class="btn" disabled>Save Wi-Fi settings · unavailable</button></article><article class="card span-6"><h3>Wi-Fi bands</h3><div class="device"><div class="device-icon">◉</div><div><div class="device-name">2.4 GHz</div><div class="device-meta">Band details pending router inspection</div></div><span class="tag warn">Unknown</span></div><div class="device"><div class="device-icon">◉</div><div><div class="device-name">5 GHz</div><div class="device-meta">Band details pending router inspection</div></div><span class="tag warn">Unknown</span></div><p class="sub">We will only enable changes supported by your exact router firmware.</p></article></div></section>
+<section class="view" id="wifi"><h2 class="view-title">Wi-Fi management</h2><p class="view-desc">Live read-only Wi-Fi details reported by the paired RN410. Configuration changes remain disabled.</p><div class="grid"><article class="card span-6"><div class="card-head"><h3>Main Wi-Fi network</h3><span class="tag" id="wifiLiveTag">WAITING</span></div><div class="field"><label>2.4 GHz network name (SSID)</label><input id="ssid2g" value="Waiting for router data" disabled></div><div class="field"><label>5 GHz network name (SSID)</label><input id="ssid5g" value="Waiting for router data" disabled></div><p class="sub" id="wifiInfoNote">SSID is read directly from RN410 firmware configuration. Password and security details are not collected.</p></article><article class="card span-6"><h3>Wi-Fi bands</h3><div class="device"><div class="device-icon">◉</div><div><div class="device-name">2.4 GHz</div><div class="device-meta" id="band2gMeta">Waiting for router data</div></div><span class="tag" id="band2gTag">WAITING</span></div><div class="device"><div class="device-icon">◉</div><div><div class="device-name">5 GHz</div><div class="device-meta" id="band5gMeta">Waiting for router data</div></div><span class="tag" id="band5gTag">WAITING</span></div><p class="sub" id="radioCount">Radio configuration not yet read.</p></article></div></section>
 <section class="view" id="devices"><h2 class="view-title">Connected devices</h2><p class="view-desc">Read-only device records reported by the paired RN410 router.</p><article class="card"><div class="card-head"><h3>Router-reported devices</h3><span class="sub" id="deviceUpdated">Not connected</span></div><div class="table-wrap"><table class="table"><thead><tr><th>Device</th><th>IP address</th><th>MAC address</th><th>Connection</th></tr></thead><tbody id="deviceTableBody"><tr><td colspan="4" class="empty">No router data received yet.</td></tr></tbody></table></div></article></section>
 <section class="view" id="mesh"><h2 class="view-title">Mesh topology</h2><p class="view-desc">Mesh node discovery will be added after identifying the router and node models.</p><div class="grid"><article class="card span-4"><div class="card-head"><h3>Main gateway</h3><span class="tag warn">Unverified</span></div><div class="metric">—</div><p class="sub">192.168.55.254 · planned endpoint</p></article><article class="card span-4"><div class="card-head"><h3>Satellite node 01</h3><span class="tag warn">Unknown</span></div><div class="metric">—</div><p class="sub">Waiting for router data</p></article><article class="card span-4"><div class="card-head"><h3>Satellite node 02</h3><span class="tag warn">Unknown</span></div><div class="metric">—</div><p class="sub">Waiting for router data</p></article></div></section>
 <section class="view" id="network"><h2 class="view-title">Network monitoring</h2><p class="view-desc">Live throughput, latency, and uptime require a supported router API or a local companion service.</p><div class="grid"><article class="card span-4"><h3>Download</h3><div class="metric">-- <small>Mbps</small></div><p class="sub">No live measurement</p></article><article class="card span-4"><h3>Upload</h3><div class="metric">-- <small>Mbps</small></div><p class="sub">No live measurement</p></article><article class="card span-4"><h3>Latency</h3><div class="metric">-- <small>ms</small></div><p class="sub">No live measurement</p></article><article class="card span-12"><h3>Monitoring roadmap</h3><div class="device"><div class="device-icon">1</div><div><div class="device-name">Identify router model and firmware</div><div class="device-meta">Required before selecting an integration method</div></div><span class="tag warn">Pending</span></div><div class="device"><div class="device-icon">2</div><div><div class="device-name">Test local read-only connection</div><div class="device-meta">Confirm supported status and device endpoints</div></div><span class="tag">Next</span></div><div class="device"><div class="device-icon">3</div><div><div class="device-name">Add secure live monitoring</div><div class="device-meta">Avoid exposing router credentials in the web app</div></div><span class="tag">Planned</span></div></article></div></section>
@@ -70,11 +70,13 @@ function buildPairingScript(){
         'scripts/config/app_main.js'
       ];
       const clues = [];
+      let configSource = '';
       for (const path of inspectFiles) {
         try {
           const fileResponse = await fetch('/skyrouter/' + path, {cache:'no-store', credentials:'include'});
           if (!fileResponse.ok) continue;
           const fileText = await fileResponse.text();
+          if (path === 'scripts/config/config.js') configSource = fileText;
           const lines = fileText.split(/\\r?\\n/);
           for (const line of lines) {
             if (/ssid|wlan|wireless|encrypt|security|channel|traffic|throughput|rx[_A-Za-z]*bytes|tx[_A-Za-z]*bytes|octets|bandwidth|rate|speed|ifname|interface/i.test(line) &&
@@ -91,7 +93,10 @@ function buildPairingScript(){
         const statusResponse = await fetch('/skyrouter/skyInfoStatus.asp', {cache:'no-store', credentials:'include'});
         if (statusResponse.ok) wan = await statusResponse.json();
       } catch (_) {}
-      const payload = {wireless, wired, wan, clues, sampledAt: new Date().toISOString()};
+      const readConst = name => { const m = configSource.match(new RegExp('(?:const|var|let)\\s+' + name + '\\s*=\\s*["\\']([^"\\']*)["\\']')); return m ? m[1] : null; };
+      const readNumber = name => { const m = configSource.match(new RegExp('(?:const|var|let)\\s+' + name + '\\s*=\\s*(-?\\d+)')); return m ? Number(m[1]) : null; };
+      const wifiInfo = {ssid2g:readConst('SSID_2g'), ssid5g:readConst('SSID_5g'), wlan2g:readNumber('wlan_2g'), wlan5g:readNumber('wlan_5g'), wlanNum:readNumber('wlan_num')};
+      const payload = {wireless, wired, wan, clues, wifiInfo, sampledAt: new Date().toISOString()};
       if (window.top.opener && !window.top.opener.closed) {
         window.top.opener.postMessage({type:'SKYMESH_RN410_DATA', token:PAIR_TOKEN, payload}, APP_ORIGIN);
       } else {
@@ -129,7 +134,20 @@ function renderRouterData(payload){
   lastRouterPayload=payload;
   const inspection=document.getElementById('routerInspection');
   if(inspection) inspection.textContent=Array.isArray(payload.clues)&&payload.clues.length?payload.clues.join('\\n'):'No matching Wi-Fi or traffic clues found in the inspected firmware files.';
-  const wireless=Array.isArray(payload.wireless)?payload.wireless:[];
+  const wifi=payload.wifiInfo||{};
+   const ssid2=document.getElementById('ssid2g'), ssid5=document.getElementById('ssid5g');
+   if(ssid2) ssid2.value=wifi.ssid2g||'Not exposed by firmware';
+   if(ssid5) ssid5.value=wifi.ssid5g||'Not exposed by firmware';
+   const wifiTag=document.getElementById('wifiLiveTag');
+   if(wifiTag){wifiTag.textContent=(wifi.ssid2g||wifi.ssid5g)?'LIVE · READ ONLY':'PARTIAL';wifiTag.className=(wifi.ssid2g||wifi.ssid5g)?'tag good':'tag warn';}
+   const b2=document.getElementById('band2gMeta'), b5=document.getElementById('band5gMeta');
+   if(b2) b2.textContent=wifi.ssid2g?'SSID available from firmware':'SSID not exposed';
+   if(b5) b5.textContent=wifi.ssid5g?'SSID available from firmware':'SSID not exposed';
+   const b2t=document.getElementById('band2gTag'), b5t=document.getElementById('band5gTag');
+   if(b2t){b2t.textContent=wifi.ssid2g?'CONFIGURED':'UNKNOWN';b2t.className=wifi.ssid2g?'tag good':'tag warn';}
+   if(b5t){b5t.textContent=wifi.ssid5g?'CONFIGURED':'UNKNOWN';b5t.className=wifi.ssid5g?'tag good':'tag warn';}
+   const rc=document.getElementById('radioCount'); if(rc) rc.textContent=wifi.wlanNum!==null&&wifi.wlanNum!==undefined?'Firmware reports '+wifi.wlanNum+' wireless interface entries. Index values are firmware identifiers, not enabled/disabled status.':'Radio count unavailable.';
+   const wireless=Array.isArray(payload.wireless)?payload.wireless:[];
   const wired=Array.isArray(payload.wired)?payload.wired:[];
   const devices=[
     ...wireless.map(d=>({...d,connection:'Wi-Fi'})),
